@@ -26,6 +26,7 @@ int numero_arestas (Grafo* g);                                  // Função que 
 int conta_adjacentes (Grafo* g, int v1);                        // Função que conta os vértices adjacentes a um vértice específico
 int maximo_adjacente (Grafo* g);                                // Função que retorna qual a quantidade máxima de adjacentes do grafo
 int grau_medio (Grafo* g);                                      // Função que retorna o grau médio do grafo
+float densidade (Grafo* g);                                     // Função que calcula a densidade do grafo
 
 
 #endif // GRAFO_H_INCLUDED

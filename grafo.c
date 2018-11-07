@@ -432,3 +432,16 @@ int grau_medio (Grafo* g) {
     //printf("\n\n\nMEDIA = %f\n", media);
     return media;
 }
+
+float densidade (Grafo* g) {
+    if (g == NULL) return -1; // Grafo não existe
+
+    float arestas = g->qtd_arestas;
+    float vertices = g->qtd_vertices;
+    float densidade;
+
+    densidade = (2*arestas)/ (vertices * (vertices - 1));
+
+    printf("DENSIDADE = %f\n", densidade);
+    return densidade;
+}
