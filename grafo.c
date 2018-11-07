@@ -352,7 +352,7 @@ void libera_grafo (Grafo** g) {
 
     free((*g)->aresta);
     free((*g)->info_v);
-    free(g);
+    free(*g);
 
     (*g) = NULL;    // Faz o endereço do grafo apontar para NULL
 }
