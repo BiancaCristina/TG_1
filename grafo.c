@@ -369,3 +369,47 @@ int numero_arestas (Grafo* g) {
 
     return g->qtd_arestas;
 }
+
+int conta_adjacentes (Grafo* g, int v1) {
+    if (g == NULL || v1 < 0) return -1; // Grafo não existe ou vértice inválido (negativo)
+
+    int qtd_adjacentes = 0;
+    // Cria nó para percorrer os adjacentes de v1
+    no* aux = (no*)malloc(sizeof(no));
+
+    if (aux == NULL) {
+        // Problema ao alocar nó auxiliar
+        return -1;
+    }
+
+    aux = g->aresta[v1];
+
+    while (aux != NULL) {
+        // Percorre os adjacentes de v1 até ser NULL
+        qtd_adjacentes++;
+        aux = aux->prox;
+    }
+
+    return qtd_adjacentes;
+}
+
+int maximo_adjacente (Grafo* g) {
+    if (g == NULL) return -1;   // Grafo não existe
+
+    int i;
+    int max_adj = 0;    // Variável que guarda o max_adj
+    int temp;           // Variável que guarda temporariamente o max_adj
+    int vertices = g->qtd_vertices;
+
+    for (i=0; i< vertices; i++) {
+        temp = conta_adjacentes(g, i);
+
+            if (temp > max_adj) {
+            max_adj = temp;
+        }
+    }
+
+    printf("MAIOR = %d\n", max_adj);
+
+    return max_adj;
+}

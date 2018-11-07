@@ -23,5 +23,6 @@ typedef struct aresta aresta;
 /// Funções específicas do trabalho
 int numero_vertices (Grafo* g);                                 // Função que retorna a quantidade de vertices de um grafo
 int numero_arestas (Grafo* g);                                  // Função que retorna a quantidade de arestas do grafo
-
+int conta_adjacentes (Grafo* g, int v1);                        // Função que conta os vértices adjacentes a um vértice específico
+int maximo_adjacente (Grafo* g);                                // Função que retorna qual a quantidade máxima de adjacentes do grafo
 #endif // GRAFO_H_INCLUDED
