@@ -413,3 +413,22 @@ int maximo_adjacente (Grafo* g) {
 
     return max_adj;
 }
+
+int grau_medio (Grafo* g) {
+    if (g == NULL) return -1; // Grafo não existe
+
+    int i;
+    int soma = 0;   // Guarda a somatória dos graus
+    int vertices = g->qtd_vertices;
+    float media;    // Guarda a média
+
+    for (i=0;i< vertices; i++) {
+        soma += g->info_v[i].grau;
+    }
+
+    media = soma;
+    media = media/vertices;
+
+    //printf("\n\n\nMEDIA = %f\n", media);
+    return media;
+}
