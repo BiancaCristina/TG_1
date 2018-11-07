@@ -357,3 +357,9 @@ void libera_grafo (Grafo** g) {
     (*g) = NULL;    // Faz o endereço do grafo apontar para NULL
 }
 
+/// Funções específicas do trabalho
+int numero_vertices (Grafo* g) {
+    if (g == NULL) return -1;
+
+    else return g->qtd_vertices;
+}
