@@ -57,6 +57,42 @@ int indice_rotulo (Grafo* g, int rotulo) {
     else return indice;
 }
 
+int insere_rotulo (Grafo* g, int x, int y, int tamanho) {
+    // Essa função verifica se os rótulos já estão no grafo e os insere caso não estejam
+    int flagx = 0;      // Flag pra marcar caso o rotulo x já esteja no grafo
+    int flagy = 0;      // Flag pra marcar caso o rótulo y já esteja no grafo
+    int i;
+
+    for (i=0; i< g->qtd_vertices; i++) {
+        if (g->info_v[i].r == x)  flagx = 1;
+
+        if (g->info_v[i].r == y)  flagy = 1;
+
+        if (flagx == 1 && flagy == 1) {
+            break;
+        }
+    }
+
+    if (flagx != 1) {
+        // Nesse caso, x ainda nao esta no grafo
+        preenche_vertice(g, tamanho, x);
+        tamanho++;
+    }
+
+    if (flagy != 1) {
+        // Nesse caso, y ainda nao esta no grafo
+        preenche_vertice(g, tamanho, y);
+        tamanho++;
+    }
+
+    return tamanho;
+}
+
+void preenche_vertice (Grafo* g, int i, int r) {
+    g->info_v[i].v = i;     // Índice do vértice == i
+    g->info_v[i].r = r;     // Rótulo do vértice == r
+}
+
 /// Funçoes básicas de um grafo
 Grafo* cria_grafo(int qtd_vertices) {
     if (qtd_vertices < 0) return NULL; // Quantidade de vértices invalida (negativa)

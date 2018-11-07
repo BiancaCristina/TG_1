@@ -14,6 +14,8 @@ void libera_grafo (Grafo** g);                                  // Função que 
 typedef struct vertice vertice;
 int formata_rotulo (Grafo* g, int vertice);                         // Função que retorna o rótulo de um vértice
 int indice_rotulo (Grafo* g, int rotulo);                           // Retorna o índice de um vértice à partir do seu rótulo
+int insere_rotulo (Grafo* g, int x, int y, int tamanho);            // Função que verifica se os rótulos x e y já estão presentes no grafo e os insere
+void preenche_vertice (Grafo* g, int i, int r);                     // Função que insere o vértice no grafo
 
 /// Aresta
 typedef struct aresta aresta;
