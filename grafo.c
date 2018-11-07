@@ -445,3 +445,22 @@ float densidade (Grafo* g) {
     printf("DENSIDADE = %f\n", densidade);
     return densidade;
 }
+
+float porcentagem_extremos(Grafo* g) {
+    if (g == NULL) return -1; // Grafo não existe
+
+    int i=0;
+    int contador = 0;   // Variável que conta a quantidade de extremos do grafo
+    float porcentagem;
+
+    for (i=0;i< g->qtd_vertices; i++) {
+        if (g->info_v[i].grau == 1) contador++; // Incrementa o contador se o grau de um determinado vértice for igual a 1
+    }
+
+    porcentagem = contador;
+    porcentagem = porcentagem/ g->qtd_vertices;
+
+    printf("Porcentagem = %.2f\n", (porcentagem*100));
+
+    return porcentagem;
+}
