@@ -363,3 +363,9 @@ int numero_vertices (Grafo* g) {
 
     else return g->qtd_vertices;
 }
+
+int numero_arestas (Grafo* g) {
+    if (g == NULL) return -1;       // Grafo não existe
+
+    return g->qtd_arestas;
+}
