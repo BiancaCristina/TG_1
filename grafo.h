@@ -34,5 +34,6 @@ float coeficiente_agrupamento (Grafo* g);                       // Função que 
 int conta_componentes_conexas (Grafo* g);                       /// Função que conta a quantidade de componentes conexas do grafo
 int eh_conexo (Grafo* g);                                       // Função que verifica se um grafo é conexo
 int dijkstra (Grafo* g, int v1, int v2);                        /// (PROBLEMA KILLED) Função que calcula o menor caminho entre dois vértices
-
+float centralidade_vertice (Grafo* g, int v1);                  /// Problemao de KILLED Função que calcula a centralidade de um vértice
+float centralidade_grafo (Grafo* g);                            /// Problemão de KILLED Função que calcula a centralidade do grafo
 #endif // GRAFO_H_INCLUDED

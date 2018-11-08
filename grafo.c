@@ -766,7 +766,7 @@ int dijkstra (Grafo* g, int v1, int v2) {
     int* visitados;         // Vetor para marcar os vértices já visitados
     int* antecessor;        // Vetor para guardar o vértice anterior ao atual
     int* distancia;         // Vetor que guarda a distância
-    int* caminho;           // Vetor que guarda o caminho percorrido
+    //int* caminho;           // Vetor que guarda o caminho percorrido
 
     visitados = (int*)calloc(vertices, sizeof(int));
 
@@ -792,16 +792,6 @@ int dijkstra (Grafo* g, int v1, int v2) {
         return -1;
     }
 
-    caminho = (int*)malloc(tamanho * sizeof(int));
-
-    if (caminho == NULL) {
-        // Problema ao alocar vetor de caminho
-        free(distancia);
-        free(antecessor);
-        free(visitados);
-        return -1;
-    }
-
     for (i=0; i< vertices; i++) {
         // Inicializa todas as posicoes de antecessor com -1
         // Inicializa todas as posicoes de distancia com INFINITO
@@ -819,7 +809,7 @@ int dijkstra (Grafo* g, int v1, int v2) {
 
     while (inicial != v2 && inicial != -1) {
         // Esse laço permancera até que o inicial chegue ao destino ou não exista caminho entre v1 e v2
-        printf("VERTICE ATUAL = %d\n", inicial);
+        //printf("VERTICE ATUAL = %d\n", inicial);
 
         for (i=0; i< vertices; i++) {
             if (verifica_adjacencia(g, inicial, i) && visitados[i] == 0) {
@@ -856,15 +846,18 @@ int dijkstra (Grafo* g, int v1, int v2) {
 
     // Adiciona o caminho percorrido no vetor caminho (caso exista)
 
+    dist_total = 1;         // Conta o primeiro vertice
+
     if (inicial == v2) {
         // Caso haja caminho entre v1 e v2
-        caminho[0] = v2;
+        //caminho[0] = v2;
         k = 1;
 
         while (inicial != v1) {
-            caminho[k] = antecessor[inicial];
+            //caminho[k] = antecessor[inicial];
             inicial = antecessor[inicial];
             k++;
+            dist_total++;       // Soma a dist_total
         }
     }
 
@@ -877,7 +870,7 @@ int dijkstra (Grafo* g, int v1, int v2) {
     // Imprime o menor caminho
     //printf("Menor caminho entre os vértices %d e %d\n", v1, v2);
 
-    
+    /*
     for (i=k;i>0;i--) {
         if (i==1) {
             // Imprime sem "->"
@@ -890,13 +883,80 @@ int dijkstra (Grafo* g, int v1, int v2) {
             dist_total++;
         }
     }
-    
+    */
     printf("DISTANCIA TOTAL = %d\n", dist_total);
 
     free(visitados);
-    free(caminho);
     free(antecessor);
     free(distancia);
 
     return dist_total;
+}
+
+float centralidade_vertice (Grafo* g, int v1) {
+    if (g == NULL || v1 < 0) return -1;     // Grafo não existe ou vértice inválido
+
+    int vertices = g->qtd_vertices;
+    int i;
+    int soma = 0;       // Guarda o somatório
+    int dij_temp;       // Guarda a distância temporária entre o vértice "v1" e "i"
+    int contador = 0;   // Conta quantos vértices são alcançáveis a partir de v1
+    int aleatorio;      // Escolhe qual vértice será analisado aleatoriamente
+    int maximo = 45;   // Limita a quantidade de vertices analisados
+    float centralidade;
+    float denominador;
+
+    srand(time(NULL));
+    for (i=0; i< maximo; i++) {
+        // A variavel maxima limita a quantidade de vertices analisados
+        // Os vertices analisados sao aleatorios para que pontos extremos nao prejudiquem o calculo
+
+        aleatorio = rand() % vertices;
+
+        if (aleatorio != v1) {
+            // Se "i" for diferente de v1 (vertice analisado)
+
+            dij_temp = dijkstra(g, v1, aleatorio);
+            printf("i = %d\n", i);
+            if (dij_temp != -1) {
+                // Caso exista caminho entre v1 e aleatorio
+                soma += dij_temp;
+                contador++;     // Conta a quantidade de vértices analisados
+                //printf("d(%d, %d) = %d\n", v1, i, dij_temp);
+                printf("CONTADOR = %d\n", contador);
+            }
+        }
+    }
+
+    denominador = soma;
+    denominador = denominador/contador;
+    centralidade = vertices - 1;
+    centralidade = centralidade/denominador;
+
+    printf("CENTRALIDADEDE %d = %f\n", v1, centralidade);
+
+    return centralidade;
+}
+
+float centralidade_grafo (Grafo* g) {
+    if (g == NULL) return -1;       // Grafo não existe
+
+    int i;
+    int vertices = g->qtd_vertices;
+    int aleatorio;
+    int maximo;
+    float centralidade;
+
+    srand(time(NULL));
+    for (i=0; i< vertices; i++) {
+        // Percorre o grafico até um valor maximo
+        // Escolhe vértices aleatorios para analisar (para que pontos extremos não afetem o calculo)
+        aleatorio = rand() % vertices;
+
+        centralidade += centralidade_vertice(g, aleatorio);
+    }
+
+    centralidade = centralidade/vertices;
+
+    return centralidade;
 }
