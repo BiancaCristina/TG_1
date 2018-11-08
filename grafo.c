@@ -409,7 +409,7 @@ int maximo_adjacente (Grafo* g) {
         }
     }
 
-    printf("MAIOR = %d\n", max_adj);
+    //printf("MAIOR = %d\n", max_adj);
 
     return max_adj;
 }
@@ -497,7 +497,7 @@ int busca_largura (Grafo* g, int* visitado, int v1) {
 
             if (verifica_adjacencia(g, atual, i) && visitado[i] == 0) {
                 // Os vértices "atual" e "i" são adjacentes e "i" ainda não foi visitado
-                printf("ADJACENTE %d! Contador = %d! Tamanho_fila = %d\n", i, contador, fila_tamanho(fi));
+                //printf("ADJACENTE %d! Contador = %d! Tamanho_fila = %d\n", i, contador, fila_tamanho(fi));
                 visitado[i] = 1;
                 insere_fila(fi, i);
                 cont_adj++;
@@ -507,23 +507,17 @@ int busca_largura (Grafo* g, int* visitado, int v1) {
 
                 if (contador > 22000) {
                     // Nesse caso, esse vértice nao pode ter mais nenhum que seja adjacente a ele
-                    printf("ADJACENTE %d! Contador = %d! Tamanho_fila = %d\n", i, contador, fila_tamanho(fi));
+                    //printf("ADJACENTE %d! Contador = %d! Tamanho_fila = %d\n", i, contador, fila_tamanho(fi));
                     break;
                 }
-
-
             }
 
             if (contador > 22000) break;
         }
     }
 
-    printf("ADJACENTE %d! Contador = %d! Tamanho_fila = %d\n", i, contador, fila_tamanho(fi));
+    //printf("ADJACENTE %d! Contador = %d! Tamanho_fila = %d\n", i, contador, fila_tamanho(fi));
     libera_fila(fi);
-
-    for (i=0;i< g->qtd_vertices; i++) {
-            printf("visitado[%d] = %d  \n", i, visitado[i]);
-    }
 
     return 1;
 }
@@ -630,16 +624,15 @@ float agrupamento_vertice (Grafo* g, int v1) {
     return coeficiente;
 }
 
-float coeficiente_agrupamento (Grafo* g, int maximo) {
-    // O maximo define a quantidade máxima de vértices a ser analisada
-
-    if (g->qtd_vertices < 20000) maximo = -1;
-
+float coeficiente_agrupamento (Grafo* g) {
     if (g == NULL) return -1; // Grafo não existe
-
+    
+    int maximo = -1;           // Quantidade máxima de vertices a ser analisada
     int vertices = g->qtd_vertices;
     int i,j;
     float media = 0;
+
+    if (g->qtd_vertices > 20000) maximo = 100;
 
     if (maximo == -1) {
         // Caso o grafo seja relativamente pequeno
@@ -664,7 +657,6 @@ float coeficiente_agrupamento (Grafo* g, int maximo) {
             aleatorio = rand() % vertices;
             media+= agrupamento_vertice(g, aleatorio);
         }
-
     }
 
     media = media/vertices; // Calcula a media
@@ -672,4 +664,60 @@ float coeficiente_agrupamento (Grafo* g, int maximo) {
     printf("COEFICIENTE DO GRAFO = %f\n", media);
 
     return media;
+}
+
+int conta_componentes_conexas (Grafo* g) {
+    if (g == NULL) return -1;       // Grafo não existe
+
+    int i;
+    int* visitados;
+    int contador = 0;
+    int vertices = g->qtd_vertices;
+    int maximo = -1;
+
+    if (vertices > 20000) maximo = 400; 
+
+    visitados = (int*)calloc(vertices, sizeof(int));
+
+    if (visitados == NULL) {
+        // Problema ao alocar vetor de visitados
+        return -1;
+    }
+
+    if (maximo == -1) {
+        // Para grafos relativamente pequenos
+
+        for (i=0; i< vertices; i++) {
+            if (visitados[i] == 0) {
+                // Caso ache um vértice desconectado aos demais, faz uma busca em largura nele
+                // Não precisa zerar o vetor de visitados para que não faça busca novamente em vértices que já foram visitados
+                printf("CONTANDO COMPONENTES CONEXAS, CONTADOR = %d\n", contador);
+                busca_largura(g, visitados, i);
+                contador++;
+            }
+        }
+
+        printf("QTD COMPONENTES CONEXAS = %d\n", contador);
+    }
+    
+    else {
+        // Para grafos maiores
+        // Uso a variavel "maximo" para limitar a quantidade de vertices analisados
+
+        for (i=0; maximo > 0; i++) {
+            if (visitados[i] == 0) {
+                // Caso ache um vértice desconectado aos demais, faz uma busca em largura nele
+                // Não precisa zerar o vetor de visitados para que não faça busca novamente em vértices que já foram visitados
+                printf("CONTANDO COMPONENTES CONEXAS, CONTADOR = %d\n", contador);
+                busca_largura(g, visitados, i);
+                contador++;
+                maximo--;       // Decrementa o maximo pra garantir que pelo menos 400 vertices serao analisados 
+            }
+        }
+
+        printf("QTD COMPONENTES CONEXAS = %d\n", contador);
+    }
+
+    free(visitados);
+    return contador;
 }

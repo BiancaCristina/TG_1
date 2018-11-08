@@ -8,16 +8,15 @@ int main() {
 
     int qtd_vertices;           // Guarda a qtd_vertices do grafo
     int aproximado = 400000;     // Marca a quantidade aproximada de vértices
-    int maximo = 100;           // Quantidade máxima de vertices a ser analisada
     Grafo* g;
 
     url1 = (char*)malloc(sizeof(char));
     //url1 = "/home/algar/Documentos/Bianca/Grafos/email-Enron.txt";
     //url1 = "/home/algar/Documentos/Bianca/Grafos/ca-GrQc.txt";
 
-    //url1 = "/home/bianca/Documentos/Grafos/ca-GrQc.txt";
+    url1 = "/home/bianca/Documentos/Grafos/ca-GrQc.txt";
     //url1 = "/home/bianca/Documentos/Grafos/ca-HepTh.txt";
-    url1 = "/home/bianca/Documentos/Grafos/email-Enron.txt";
+    //url1 = "/home/bianca/Documentos/Grafos/email-Enron.txt";
 
     /// Conta a quantidade de vértices do grafo
     qtd_vertices = conta_vertices(aproximado, url1);
@@ -38,8 +37,10 @@ int main() {
     //getchar();
 
     /// Coeficiente de agrupamento do vértice
-    coeficiente_agrupamento(g, maximo);
+    //coeficiente_agrupamento(g);
 
+    /// Conta componentes conexas do grafo
+    conta_componentes_conexas(g);
     //printf("AQUI.........\n");
     libera_grafo(&g);
     //free(url1);

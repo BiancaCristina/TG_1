@@ -29,9 +29,8 @@ int grau_medio (Grafo* g);                                      // Função que 
 float densidade (Grafo* g);                                     // Função que calcula a densidade do grafo
 float porcentagem_extremos(Grafo* g);                           // Função que calcula quantos vétices extremos existem no grafo
 int busca_largura (Grafo* g, int* visitado, int v1);            /// Função que faz busca em largura à partir de um vértice específico
-float agrupamento_vertice (Grafo* g, int v1);    // Função que retorna o coeficiente de agrupamento de um dado vértice
-float coeficiente_agrupamento (Grafo* g, int maximo);           /// (PROBLEMA KILLED) Função que retorna o coeficiente de agrupamento do grafo
-
-
+float agrupamento_vertice (Grafo* g, int v1);                   // Função que retorna o coeficiente de agrupamento de um dado vértice
+float coeficiente_agrupamento (Grafo* g);                       // Função que retorna o coeficiente de agrupamento do grafo
+int conta_componentes_conexas (Grafo* g);                       /// (PROBLEMA KILLED) Função que conta a quantidade de componentes conexas do grafo
 
 #endif // GRAFO_H_INCLUDED
