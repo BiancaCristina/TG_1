@@ -512,6 +512,7 @@ int busca_largura (Grafo* g, int* visitado, int v1) {
                     break;
                 }
 
+
             }
 
             if (contador > 22000) break;
@@ -526,4 +527,147 @@ int busca_largura (Grafo* g, int* visitado, int v1) {
     }
 
     return 1;
+}
+
+float agrupamento_vertice (Grafo* g, int* visitado, int v1) {
+    if (g == NULL || v1 < 0 ) return -1; // Grafo não existe ou vértice inválido (negativo)
+
+    int i, j;
+    int k = 0;          // Variavel que marca o tamanho do vetor de adjacentes
+    int* v_adj;         // Vetor de adjacentes
+    int contador = 0;   // Variavel que conta quantos pares vizinhos de v1 estão conectados
+    int qtd_adjacentes;
+    float coeficiente;  // Variavel que guarda o coeficiente de agrupamento do vertice
+
+    v_adj = (int*)malloc(g->qtd_vertices * sizeof(int));
+
+    if (v_adj == NULL) {
+        // Problema ao alocar vetor de adjacentes
+        return -1;
+    }
+
+    // Verifica quais vértices são adjacentes ao vértice v1
+    for (i=0;i< g->qtd_vertices; i++) {
+        if (verifica_adjacencia(g, v1, i)) {
+            // Caso seja adjacente, insere no vetor de adjacentes
+            v_adj[k] = i;
+            k++;
+        }
+    }
+
+    // Cria vetor de arestas pra demarcar quais pares já foram verificados
+    //int aresta[g->qtd_vertices][g->qtd_vertices];
+    int vertices = g->qtd_vertices;
+    int z;
+    int** aresta = (int**)malloc(vertices * sizeof(int*));
+
+    for (z=0; z< vertices; z++) {
+        aresta[z] = (int*)malloc(vertices*sizeof(int));
+    }
+    // Cria variaveis pra facilitar a identificacao do v_adj[i] e v_adj[j]
+    int linha, coluna;
+
+    // Verifica quais pares estão conectados
+    for (i=0;i< k; i++) {
+        linha = v_adj[i];
+        for (j=0;j< k; j++) {
+            coluna = v_adj[j];
+
+            if (verifica_adjacencia(g, v_adj[i], v_adj[j]) && aresta[linha][coluna] != 1 && aresta[coluna][linha] != 1) {
+                // Se forem conectados, marca a aresta como visitada
+                aresta[linha][coluna] = 1;
+                aresta[linha][coluna] = 1;
+                contador++;
+            }
+        }
+    }
+
+    qtd_adjacentes = conta_adjacentes(g, v1);
+
+    /// TAVA DANDO PROBLEMA COM VERTICE 0 POR CAUSA DA QTD DE ADJACENTES SER == 1, AI O DENOMINADOR FICAVA == 0.
+    /// NESSE CASO, CONSIDEREI QUE O COEFICIENTE == 0
+
+    if (contador != 0 && (qtd_adjacentes * (qtd_adjacentes - 1)) != 0 ) {
+        coeficiente = (2*contador);
+        coeficiente = coeficiente/(qtd_adjacentes * (qtd_adjacentes - 1));
+    }
+
+    else coeficiente = 0;
+
+    printf("COEFICIENTE DE %d = %f\n", v1, coeficiente);
+    //printf("c[%d] = %f, contador = %d, qtd_adjacentes = %d\n", v1, coeficiente, contador, qtd_adjacentes);
+
+    // Libera o vetor de arestas
+    i = 0;
+
+    for (i=0; i< vertices; i++) {
+        free(aresta[i]);
+    }
+
+    free(aresta);
+
+    return coeficiente;
+}
+
+float coeficiente_agrupamento (Grafo* g, int maximo) {
+    // O maximo define a quantidade máxima de vértices a ser analisada
+
+    if (g->qtd_vertices < 20000) maximo = -1;
+
+    if (g == NULL) return -1; // Grafo não existe
+
+    int* visitados;
+    int vertices = g->qtd_vertices;
+    int i,j;
+    float media = 0;
+
+    visitados = (int*)calloc(vertices, sizeof(int));
+
+    if (visitados == NULL) {
+        // Problema ao alocar vertices de visitados
+        return -1;
+    }
+
+    if (maximo == -1) {
+        // Caso o grafo seja relativamente pequeno
+
+        media = 0;
+
+        for (i=0;i< vertices; i++) {
+        media += agrupamento_vertice (g, visitados, i);
+
+            for (j=0;j< vertices;j++) {
+            // Coloca todas as posicoes do vetor de visitados == 0 pra refazer a busca em outro vertice!
+            visitados[j] = 0;
+            }
+        }
+    }
+
+    else {
+        // Caso o grafo seja grande, usarei a variavel "maximo" para limitar quantos vertices serao utilizados no calculo da media
+        // Alem disso, os vertices a serem analisados serao aleatorios (para tentar minimizar pontos extremos do calculo)
+        // Essa funcao sera executada pelo menos 5 vezes em grafos que utilizem esse "maximo" para que cada resultado seja utilizado para fazer uma media geral (a fim de obter o resultado mais aproximado)
+        media = 0;
+        int aleatorio;
+
+        srand(time(NULL));      // Garante aleatoriedade em cada execucao
+
+        for (i=0; i< maximo; i++) {
+            aleatorio = rand() % vertices;
+            media+= agrupamento_vertice(g, visitados, aleatorio);
+
+            for (j=0; j< vertices; j++) {
+                // Coloca todas as posicoes do vetor de visitados == 0 pra refazer a busca em outro vertice!
+                visitados[j] = 0;
+            }
+        }
+
+    }
+
+    media = media/vertices; // Calcula a media
+
+    printf("COEFICIENTE DO GRAFO = %f\n", media);
+    free(visitados);
+
+    return media;
 }

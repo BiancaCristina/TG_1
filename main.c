@@ -15,9 +15,9 @@ int main() {
     //url1 = "/home/algar/Documentos/Bianca/Grafos/email-Enron.txt";
     //url1 = "/home/algar/Documentos/Bianca/Grafos/ca-GrQc.txt";
 
-    url1 = "/home/bianca/Documentos/Grafos/ca-GrQc.txt";
+    //url1 = "/home/bianca/Documentos/Grafos/ca-GrQc.txt";
     //url1 = "/home/bianca/Documentos/Grafos/ca-HepTh.txt";
-    //url1 = "/home/bianca/Documentos/Grafos/email-Enron.txt";
+    url1 = "/home/bianca/Documentos/Grafos/email-Enron.txt";
 
     /// Conta a quantidade de vértices do grafo
     qtd_vertices = conta_vertices(aproximado, url1);
@@ -32,14 +32,17 @@ int main() {
     le_aresta(g, url1);
 
     /// Busca em largura
-    int* visitado = (int*)calloc(qtd_vertices, sizeof(int));
-    busca_largura(g, visitado, 0);
+    //int* visitado = (int*)calloc(qtd_vertices, sizeof(int));
+    //busca_largura(g, visitado, 0);
+    //free(visitado);
+    //getchar();
 
     /// Coeficiente de agrupamento do vértice
-    //coeficiente_agrupamento(g, maximo);
+    coeficiente_agrupamento(g, maximo);
 
     //printf("AQUI.........\n");
     libera_grafo(&g);
     //free(url1);
-    exit(1);
+
+    return 1;
 }
