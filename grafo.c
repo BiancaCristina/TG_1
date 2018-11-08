@@ -505,7 +505,6 @@ int busca_largura (Grafo* g, int* visitado, int v1) {
 
                 if (cont_adj == max_adj) break;     // Esse vértice não possui mais nenhum outro vértice adjacente a ele
 
-
                 if (contador > 22000) {
                     // Nesse caso, esse vértice nao pode ter mais nenhum que seja adjacente a ele
                     printf("ADJACENTE %d! Contador = %d! Tamanho_fila = %d\n", i, contador, fila_tamanho(fi));
@@ -529,7 +528,7 @@ int busca_largura (Grafo* g, int* visitado, int v1) {
     return 1;
 }
 
-float agrupamento_vertice (Grafo* g, int* visitado, int v1) {
+float agrupamento_vertice (Grafo* g, int v1) {
     if (g == NULL || v1 < 0 ) return -1; // Grafo não existe ou vértice inválido (negativo)
 
     int i, j;
@@ -539,7 +538,11 @@ float agrupamento_vertice (Grafo* g, int* visitado, int v1) {
     int qtd_adjacentes;
     float coeficiente;  // Variavel que guarda o coeficiente de agrupamento do vertice
 
-    v_adj = (int*)malloc(g->qtd_vertices * sizeof(int));
+    // Conta a quantidade de vertices adjacentes ao v1
+    qtd_adjacentes = conta_adjacentes(g, v1);
+
+    // Cria vetor de adjacentes do tamanho de adjacentes que v1 pode possuir
+    v_adj = (int*)malloc(qtd_adjacentes * sizeof(int));
 
     if (v_adj == NULL) {
         // Problema ao alocar vetor de adjacentes
@@ -558,12 +561,31 @@ float agrupamento_vertice (Grafo* g, int* visitado, int v1) {
     // Cria vetor de arestas pra demarcar quais pares já foram verificados
     //int aresta[g->qtd_vertices][g->qtd_vertices];
     int vertices = g->qtd_vertices;
-    int z;
     int** aresta = (int**)malloc(vertices * sizeof(int*));
 
-    for (z=0; z< vertices; z++) {
-        aresta[z] = (int*)malloc(vertices*sizeof(int));
+    if (aresta == NULL) {
+        // Problema ao alocar vetor de arestas
+        free(v_adj);
+        return -1;
+    } 
+
+    for (i=0; i< vertices; i++) {
+        aresta[i] = (int*)malloc(vertices * sizeof(int)); 
+
+        if (aresta[i] == NULL) {
+            // Problema ao alocar aresta[i]
+
+            for (j=0; j< i; j++) {
+                free(aresta[j]);
+            }
+
+            free(aresta);
+            free(v_adj);
+
+            return -1;
+        }
     }
+    
     // Cria variaveis pra facilitar a identificacao do v_adj[i] e v_adj[j]
     int linha, coluna;
 
@@ -581,8 +603,6 @@ float agrupamento_vertice (Grafo* g, int* visitado, int v1) {
             }
         }
     }
-
-    qtd_adjacentes = conta_adjacentes(g, v1);
 
     /// TAVA DANDO PROBLEMA COM VERTICE 0 POR CAUSA DA QTD DE ADJACENTES SER == 1, AI O DENOMINADOR FICAVA == 0.
     /// NESSE CASO, CONSIDEREI QUE O COEFICIENTE == 0
@@ -605,6 +625,7 @@ float agrupamento_vertice (Grafo* g, int* visitado, int v1) {
     }
 
     free(aresta);
+    free(v_adj); 
 
     return coeficiente;
 }
@@ -616,17 +637,9 @@ float coeficiente_agrupamento (Grafo* g, int maximo) {
 
     if (g == NULL) return -1; // Grafo não existe
 
-    int* visitados;
     int vertices = g->qtd_vertices;
     int i,j;
     float media = 0;
-
-    visitados = (int*)calloc(vertices, sizeof(int));
-
-    if (visitados == NULL) {
-        // Problema ao alocar vertices de visitados
-        return -1;
-    }
 
     if (maximo == -1) {
         // Caso o grafo seja relativamente pequeno
@@ -634,12 +647,7 @@ float coeficiente_agrupamento (Grafo* g, int maximo) {
         media = 0;
 
         for (i=0;i< vertices; i++) {
-        media += agrupamento_vertice (g, visitados, i);
-
-            for (j=0;j< vertices;j++) {
-            // Coloca todas as posicoes do vetor de visitados == 0 pra refazer a busca em outro vertice!
-            visitados[j] = 0;
-            }
+            media += agrupamento_vertice (g, i);
         }
     }
 
@@ -654,12 +662,7 @@ float coeficiente_agrupamento (Grafo* g, int maximo) {
 
         for (i=0; i< maximo; i++) {
             aleatorio = rand() % vertices;
-            media+= agrupamento_vertice(g, visitados, aleatorio);
-
-            for (j=0; j< vertices; j++) {
-                // Coloca todas as posicoes do vetor de visitados == 0 pra refazer a busca em outro vertice!
-                visitados[j] = 0;
-            }
+            media+= agrupamento_vertice(g, aleatorio);
         }
 
     }
@@ -667,7 +670,6 @@ float coeficiente_agrupamento (Grafo* g, int maximo) {
     media = media/vertices; // Calcula a media
 
     printf("COEFICIENTE DO GRAFO = %f\n", media);
-    free(visitados);
 
     return media;
 }
