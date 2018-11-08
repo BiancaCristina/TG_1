@@ -464,3 +464,66 @@ float porcentagem_extremos(Grafo* g) {
 
     return porcentagem;
 }
+
+int busca_largura (Grafo* g, int* visitado, int v1) {
+    if (g == NULL || v1 < 0) return -1;    // Grafo não existe ou vértice inválido (negativo) ou visitados não existe
+
+    int i;
+    int atual;                  // Marca qual é o vértice que está sendo analisado
+    int cont_adj;               // Variavel que conta a quantidade de adjacentes ja encontrados de um vertice
+    int max_adj;                // Variável que guarda a quantidade maxima de adjacentes de um vertice
+    int contador = 0;           // Conta quantos adjacentes já achei
+    fila* fi;                   // Fila pra guardar os adjacentes
+    fi = cria_fila();
+
+    if (fi == NULL) {
+        // Problema ao alocar fila
+        return -1;
+    }
+
+    // Trata o vértice inicial
+    visitado[v1] = 1;
+    insere_fila(fi, v1);
+
+    // Informacoes adicionais
+    max_adj = maximo_adjacente(g);
+
+    while (!fila_vazia(fi)) {
+        atual = remove_fila_v2(fi);
+        cont_adj = 0;
+
+        for (i=0;i< g->qtd_vertices; i++) {
+            // Esse laço percorre cada vértice do grafo verificando a adjacência entre o vértice "atual" e "i"
+
+            if (verifica_adjacencia(g, atual, i) && visitado[i] == 0) {
+                // Os vértices "atual" e "i" são adjacentes e "i" ainda não foi visitado
+                printf("ADJACENTE %d! Contador = %d! Tamanho_fila = %d\n", i, contador, fila_tamanho(fi));
+                visitado[i] = 1;
+                insere_fila(fi, i);
+                cont_adj++;
+                contador++;
+
+                if (cont_adj == max_adj) break;     // Esse vértice não possui mais nenhum outro vértice adjacente a ele
+
+
+                if (contador > 22000) {
+                    // Nesse caso, esse vértice nao pode ter mais nenhum que seja adjacente a ele
+                    printf("ADJACENTE %d! Contador = %d! Tamanho_fila = %d\n", i, contador, fila_tamanho(fi));
+                    break;
+                }
+
+            }
+
+            if (contador > 22000) break;
+        }
+    }
+
+    printf("ADJACENTE %d! Contador = %d! Tamanho_fila = %d\n", i, contador, fila_tamanho(fi));
+    libera_fila(fi);
+
+    for (i=0;i< g->qtd_vertices; i++) {
+            printf("visitado[%d] = %d  \n", i, visitado[i]);
+    }
+
+    return 1;
+}

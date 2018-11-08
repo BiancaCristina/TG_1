@@ -28,5 +28,6 @@ int maximo_adjacente (Grafo* g);                                // Função que 
 int grau_medio (Grafo* g);                                      // Função que retorna o grau médio do grafo
 float densidade (Grafo* g);                                     // Função que calcula a densidade do grafo
 float porcentagem_extremos(Grafo* g);                           // Função que calcula quantos vétices extremos existem no grafo
+int busca_largura (Grafo* g, int* visitado, int v1);            /// (PROBLEMA KILLED) Função que faz busca em largura à partir de um vértice específico
 
 #endif // GRAFO_H_INCLUDED
