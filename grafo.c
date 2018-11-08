@@ -749,3 +749,154 @@ int eh_conexo (Grafo* g) {
     if (flag == 1) return 0;    // Grafo não é conexo
     else return 1;              // Grafo conexo
 }
+
+int dijkstra (Grafo* g, int v1, int v2) {
+    if (g == NULL || v1 < 0 || v2 < 0) return -1;   // Grafo não existe ou vértices inválidos (negativos)
+
+    int i;
+    int inicial;            // Marca o vértice em curso
+    int k;
+    int dist_aux;           // Distância auxiliar para calcular o menor caminho
+    int vertices = g->qtd_vertices;
+    int minimo;
+    int dist_total = 0;     // Guarda a distância percorrida no total
+    int max_adj;            // Máximo de adjacentes que um vértice pode ter
+    int cont_adj = 0;       // Conta os adjacentes do vértice atual
+    int tamanho = 100;      // Tamanho temporário para os vetores
+    int* visitados;         // Vetor para marcar os vértices já visitados
+    int* antecessor;        // Vetor para guardar o vértice anterior ao atual
+    int* distancia;         // Vetor que guarda a distância
+    int* caminho;           // Vetor que guarda o caminho percorrido
+
+    visitados = (int*)calloc(vertices, sizeof(int));
+
+    if (visitados == NULL) {
+        // Problema ao alocar vetor de visitados
+        return -1;
+    }
+
+    antecessor = (int*)malloc(vertices * sizeof(int));
+
+    if (antecessor == NULL) {
+        // Problema ao alocar veor de antecessor
+        free(visitados);
+        return -1;
+    }
+
+    distancia = (int*)malloc(vertices * sizeof(int));
+
+    if (distancia == NULL) {
+        // Problema ao alocar vetor de distancia
+        free(antecessor);
+        free(visitados);
+        return -1;
+    }
+
+    caminho = (int*)malloc(tamanho * sizeof(int));
+
+    if (caminho == NULL) {
+        // Problema ao alocar vetor de caminho
+        free(distancia);
+        free(antecessor);
+        free(visitados);
+        return -1;
+    }
+
+    for (i=0; i< vertices; i++) {
+        // Inicializa todas as posicoes de antecessor com -1
+        // Inicializa todas as posicoes de distancia com INFINITO
+
+        antecessor[i] = -1;
+        distancia[i] = INFINITO;
+    }
+
+    // Trata o vértice de origem
+    inicial = v1;               // Inicialmente, inicial == v1 (origem)
+    distancia[inicial] = 0;     // A distância do inicial pra ele mesmo é 0
+
+    // Informacoes adicionais
+    max_adj = maximo_adjacente(g);
+
+    while (inicial != v2 && inicial != -1) {
+        // Esse laço permancera até que o inicial chegue ao destino ou não exista caminho entre v1 e v2
+        printf("VERTICE ATUAL = %d\n", inicial);
+
+        for (i=0; i< vertices; i++) {
+            if (verifica_adjacencia(g, inicial, i) && visitados[i] == 0) {
+                // Se a aresta entre "inicial" e "i" existe e se "i" ainda nao foi visitado
+
+                dist_aux = distancia[inicial] + 1;  // Andou pra algum vértice
+
+                if (dist_aux < distancia[i]) {
+                    // Se a distância auxiliar for menor, substitui
+                    distancia[i] = dist_aux;
+                    antecessor[i] = inicial;    // Marca que o inicial é o antecessor do vértice "i"
+                }
+            }
+
+            if (cont_adj == max_adj) {
+                // Esse vértice não possui mais nenhum adjacente
+                break;
+            }
+        }
+
+        visitados[inicial] = 1;     // Todos os vértices adjacentes ao inicial já foram visitados
+        minimo = INFINITO;
+        inicial = -1;               // Inicial passa a ter um valor inválido
+
+        for (i=0; i< vertices; i++){
+            // Percorre para achar o próximo vértice que possui a menor distância
+
+            if (visitados[i] == 0 && distancia[i] < minimo) {
+                minimo = distancia[i];      // Novo valor para minimo
+                inicial = i;                // Vértice que será analisado
+            }
+        }
+    }
+
+    // Adiciona o caminho percorrido no vetor caminho (caso exista)
+
+    if (inicial == v2) {
+        // Caso haja caminho entre v1 e v2
+        caminho[0] = v2;
+        k = 1;
+
+        while (inicial != v1) {
+            caminho[k] = antecessor[inicial];
+            inicial = antecessor[inicial];
+            k++;
+        }
+    }
+
+    else {
+        // Não existe caminho entre v1 e v2
+        printf("Não existe caminho entre os vértices %d e %d\n", v1, v2);
+        return -1;
+    }
+
+    // Imprime o menor caminho
+    //printf("Menor caminho entre os vértices %d e %d\n", v1, v2);
+
+    
+    for (i=k;i>0;i--) {
+        if (i==1) {
+            // Imprime sem "->"
+            printf("%d \n", caminho[i-1]);
+            dist_total++;
+        }
+
+        else {
+            printf(" %d -> ", caminho[i-1]);
+            dist_total++;
+        }
+    }
+    
+    printf("DISTANCIA TOTAL = %d\n", dist_total);
+
+    free(visitados);
+    free(caminho);
+    free(antecessor);
+    free(distancia);
+
+    return dist_total;
+}

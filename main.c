@@ -43,7 +43,10 @@ int main() {
     //conta_componentes_conexas(g);
     
     // Verifica se grafo eh conexo
-    printf("CONEXO = %d\n", eh_conexo(g));
+    //printf("CONEXO = %d\n", eh_conexo(g));
+
+    // dijkstra
+    dijkstra(g, 20, 125);
 
     libera_grafo(&g);
     //free(url1);
