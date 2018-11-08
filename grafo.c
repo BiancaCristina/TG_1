@@ -721,3 +721,31 @@ int conta_componentes_conexas (Grafo* g) {
     free(visitados);
     return contador;
 }
+
+int eh_conexo (Grafo* g) {
+    if (g == NULL) return -1;       // Grafo não existe
+
+    int i;
+    int flag = 0;       // Flag que marca se o grafo é conexo ou não 
+    int* visitados;
+
+    visitados = (int*)calloc(g->qtd_vertices, sizeof(int));
+
+    if (visitados == NULL) {
+        // Problema ao alocar vetor de visitados
+        return -1;
+    }
+
+    // Escolhi o 1 arbitrariamente
+    busca_largura(g, visitados, 1);
+
+    for (i=0; i< g->qtd_vertices; i++) {
+        if (visitados[i] == 0) {
+            flag = 1;
+            break;
+        }
+    }
+
+    if (flag == 1) return 0;    // Grafo não é conexo
+    else return 1;              // Grafo conexo
+}

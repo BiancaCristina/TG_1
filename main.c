@@ -14,9 +14,9 @@ int main() {
     //url1 = "/home/algar/Documentos/Bianca/Grafos/email-Enron.txt";
     //url1 = "/home/algar/Documentos/Bianca/Grafos/ca-GrQc.txt";
 
-    url1 = "/home/bianca/Documentos/Grafos/ca-GrQc.txt";
+    //url1 = "/home/bianca/Documentos/Grafos/ca-GrQc.txt";
     //url1 = "/home/bianca/Documentos/Grafos/ca-HepTh.txt";
-    //url1 = "/home/bianca/Documentos/Grafos/email-Enron.txt";
+    url1 = "/home/bianca/Documentos/Grafos/email-Enron.txt";
 
     /// Conta a quantidade de vértices do grafo
     qtd_vertices = conta_vertices(aproximado, url1);
@@ -40,8 +40,11 @@ int main() {
     //coeficiente_agrupamento(g);
 
     /// Conta componentes conexas do grafo
-    conta_componentes_conexas(g);
-    //printf("AQUI.........\n");
+    //conta_componentes_conexas(g);
+    
+    // Verifica se grafo eh conexo
+    printf("CONEXO = %d\n", eh_conexo(g));
+
     libera_grafo(&g);
     //free(url1);
 

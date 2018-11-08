@@ -32,5 +32,6 @@ int busca_largura (Grafo* g, int* visitado, int v1);            /// Função que
 float agrupamento_vertice (Grafo* g, int v1);                   // Função que retorna o coeficiente de agrupamento de um dado vértice
 float coeficiente_agrupamento (Grafo* g);                       // Função que retorna o coeficiente de agrupamento do grafo
 int conta_componentes_conexas (Grafo* g);                       /// (PROBLEMA KILLED) Função que conta a quantidade de componentes conexas do grafo
+int eh_conexo (Grafo* g);                                       // Função que verifica se um grafo é conexo
 
 #endif // GRAFO_H_INCLUDED
