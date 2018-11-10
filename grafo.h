@@ -28,12 +28,14 @@ int maximo_adjacente (Grafo* g);                                // Função que 
 int grau_medio (Grafo* g);                                      // Função que retorna o grau médio do grafo
 float densidade (Grafo* g);                                     // Função que calcula a densidade do grafo
 float porcentagem_extremos(Grafo* g);                           // Função que calcula quantos vétices extremos existem no grafo
-int busca_largura (Grafo* g, int* visitado, int v1);            /// Função que faz busca em largura à partir de um vértice específico
+int busca_largura (Grafo* g, int* visitado, int v1);            // Função que faz busca em largura à partir de um vértice específico
 float agrupamento_vertice (Grafo* g, int v1);                   // Função que retorna o coeficiente de agrupamento de um dado vértice
 float coeficiente_agrupamento (Grafo* g);                       // Função que retorna o coeficiente de agrupamento do grafo
-int conta_componentes_conexas (Grafo* g);                       /// Função que conta a quantidade de componentes conexas do grafo
+int conta_componentes_conexas (Grafo* g);                       // Função que conta a quantidade de componentes conexas do grafo
 int eh_conexo (Grafo* g);                                       // Função que verifica se um grafo é conexo
-int dijkstra (Grafo* g, int v1, int v2);                        /// (PROBLEMA KILLED) Função que calcula o menor caminho entre dois vértices
-float centralidade_vertice (Grafo* g, int v1);                  /// Problemao de KILLED Função que calcula a centralidade de um vértice
-float centralidade_grafo (Grafo* g);                            /// Problemão de KILLED Função que calcula a centralidade do grafo
+int dijkstra (Grafo* g, int v1, int v2);                        // Função que calcula o menor caminho entre dois vértices
+float centralidade_vertice (Grafo* g, int v1);                  // Função que calcula a centralidade de um vértice
+float centralidade_grafo (Grafo* g);                            // Função que calcula a centralidade do grafo
+
+
 #endif // GRAFO_H_INCLUDED
