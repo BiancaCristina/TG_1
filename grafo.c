@@ -88,6 +88,28 @@ int insere_rotulo (Grafo* g, int x, int y, int tamanho) {
     return tamanho;
 }
 
+int insere_rotulo_v2 (Grafo* g, int x, int tamanho) {
+    // Essa função verifica se os rótulos já estão no grafo e os insere caso não estejam
+    
+    int flagx = 0;      // Flag para marcar caso o rotulo x já esteja no grafo
+    int i;
+
+    for (i=0; i< g->qtd_vertices; i++) {
+        if (g->info_v[i].r == x)  {
+            flagx = 1;
+            break;
+        }
+    }
+
+    if (flagx != 1) {
+        // Nesse caso, x ainda nao esta no grafo
+        preenche_vertice(g, tamanho, x);
+        tamanho++;
+    }
+
+    return tamanho;
+}
+
 void preenche_vertice (Grafo* g, int i, int r) {
     g->info_v[i].v = i;     // Índice do vértice == i
     g->info_v[i].r = r;     // Rótulo do vértice == r
@@ -222,14 +244,7 @@ void exibe_grafo (Grafo* g) {
 
     for (i=0; i< vertices; i++) {
         // Função que exibe os adjacentes
-        no* aux = (no*)malloc(sizeof(no));
-
-        if (aux == NULL) {
-            // Problema ao alocar no aux
-            return;
-        }
-
-        aux = g->aresta[i];
+        no* aux = g->aresta[i];
 
         while (aux != NULL) {
             printf("%d -> %d\n", formata_rotulo(g, i), formata_rotulo(g, aux->v.v));
@@ -458,7 +473,6 @@ int busca_largura (Grafo* g, int* visitado, int v1) {
     int atual;                  // Marca qual é o vértice que está sendo analisado
     int cont_adj;               // Variavel que conta a quantidade de adjacentes ja encontrados de um vertice
     int max_adj;                // Variável que guarda a quantidade maxima de adjacentes de um vertice
-    int contador = 0;           // Conta quantos adjacentes já achei
     fila* fi;                   // Fila pra guardar os adjacentes
     fi = cria_fila();
 
@@ -487,18 +501,9 @@ int busca_largura (Grafo* g, int* visitado, int v1) {
                 visitado[i] = 1;
                 insere_fila(fi, i);
                 cont_adj++;
-                contador++;
 
                 if (cont_adj == max_adj) break;     // Esse vértice não possui mais nenhum outro vértice adjacente a ele
-
-                if (contador > 22000) {
-                    // Nesse caso, esse vértice nao pode ter mais nenhum que seja adjacente a ele
-                    //printf("ADJACENTE %d! Contador = %d! Tamanho_fila = %d\n", i, contador, fila_tamanho(fi));
-                    break;
-                }
-            }
-
-            if (contador > 22000) break;
+            }          
         }
     }
 
@@ -900,4 +905,147 @@ float centralidade_grafo (Grafo* g) {
     centralidade = centralidade/vertices;
 
     return centralidade;
+}
+
+Grafo* maior_componente_conexa (Grafo* g) {
+    if (g == NULL) return NULL;     // Grafo nao existe
+
+    if (eh_conexo(g))   return g;   // Se o grafo for conexo, ele já é a maior componente conexa
+
+    int i;
+    int maximo = 50;           // Limita quantos vertices serao analisados
+    int vertices = g->qtd_vertices;
+    int contador = 0;           // Conta a quantidade de vertices alcancados a partir do vertice que esta sendo analisado
+    int atual = 0;              // Marca qual vertice esta sendo analisado
+    int maior = 0;              // Guarda qual vertice possui a maior regiao conexa
+    int temp = 0;               // Guarda a quantidade temporaria de vertices alcancados
+    int qtd_vertices_novo;      // Guarda a quantidade de vertices do novo grafo
+    int* visitados;
+
+    visitados = (int*)calloc(vertices, sizeof(int));
+
+    if (visitados == NULL) {
+        // Problema ao alocar vetor de visitados
+        return NULL;
+    }
+    
+    // Diminui a quantidade de vertices analisados se o grafo for muito grande
+    if (vertices > 20000) maximo = 15;
+
+    srand(time(NULL));
+    while (atual < vertices && maximo > 0) {
+        // Esse laco permanecera ate ter analisado todos os vertices do grafo ou ate que o maximo seja atingido
+        // A variavel maxima limita quantas vezes esse loop ocorrera 
+        // O vertice analisado sera escolhido aleatoriamente para que pontos extremos nao afetem o calculo
+
+        atual = rand() % vertices;
+
+        // Faz busca em largura no vertice atual
+        busca_largura(g, visitados, atual);
+
+        // Conta quantos vertices foram alcancados a partir do vertice atual
+        for (i=0; i< vertices; i++) {
+            if (visitados[i] == 1) contador++;
+        }
+
+        printf("VERTICE %d ALCANCA %d VERTICES! \n", atual, contador);
+
+        // Verifica se a quantidade de vertices alcancados é maior e salva o vértice caso seja
+        if (contador > temp) {
+            temp = contador;
+            maior = atual;
+            qtd_vertices_novo = contador; 
+        }
+
+        // Zera o vetor de visitados e o contador
+        for (i=0; i< vertices; i++) visitados[i] = 0;
+
+        contador = 0;
+
+        // Decrementa a variavel maximo
+        maximo--; 
+    } 
+    
+    // A variavel maior representa qual regiao de vertices preciso usar para construir a maior componente conexa
+    // A variavel contador representa quantos vertices havera no novo grafo
+    printf("VERTICE COM MAIOR REGIAO CONEXA = %d, VERTICES ALCANCADOS = %d\n", maior, qtd_vertices_novo);
+
+    // Variaveis para a segunda parte do codigo: montagem da componente conexa
+    
+    int cont_adj;               // Conta a quantidade de adjacentes ja visitados de um vertice
+    int max_adj;                // Quantidade maxima de adjacentes que qualquer vertice pode ter
+    int rotulo_atual;           // Marca o rotulo do vertice atualmente analisado
+    int vertices_novo = 0;      // Marca a quantidade de vertices atual do novo grafo
+    Grafo* novo_g;               
+    fila* fi; 
+
+    // Zera o vetor de visitados
+    for (i=0; i< vertices; i++) visitados[i] = 0; 
+
+    // Aloca a fila
+    fi = cria_fila(); 
+
+    if (fi == NULL) {
+        // Problema ao alocar fila
+        free(visitados);
+        return NULL;
+    }
+
+    novo_g = cria_grafo(qtd_vertices_novo);
+
+    if (novo_g == NULL) {
+        // Problema ao criar grafo
+        free(visitados);
+        libera_fila(fi);
+        return NULL;
+    }
+
+    // Trata o vertice indicado pela variavel "maior"
+    visitados[maior] = 1;
+    insere_fila(fi, maior);
+
+    // Informacoes adicionais
+    max_adj = maximo_adjacente(g);
+
+    printf("FAZENDO A BUSCA... \n");
+    // Busca em largura centrada no vertice indicado pela variavel "maior"
+    while (!fila_vazia(fi)) {
+        // Esse laco permanece ate que a fila fique vazia
+
+        atual = remove_fila_v2(fi);     
+        cont_adj = 0;                       // Zera os adjacentes do vertice
+        rotulo_atual = g->info_v[atual].r;  // Marca qual é o rótulo do vértice atual
+        
+        vertices_novo = insere_rotulo_v2(novo_g, rotulo_atual, vertices_novo);  // Insere infos do vertice no grafo novo
+
+        for (i=0; i< vertices; i++) {
+            // Percorre cada vertice do grafo verificando a adjacencia entre o vertice atual e o vertice i
+
+            if (verifica_adjacencia(g, atual, i) && visitados[i] == 0) {
+                // Verifica a adjacente entre o vertice atual e o vertice i
+
+                // Adiciona infos do vertice i no grafo (o atual ja foi inserido, logo nao precisa inserir novamente)
+                vertices_novo = insere_rotulo_v2(novo_g, g->info_v[i].r, vertices_novo); 
+
+                // Adiciona a aresta existente entre o vertice atual e o vertice i no novo grafo
+                insere_aresta(novo_g, g->info_v[atual].r, g->info_v[i].r);
+
+                // Marco o vertice i como visitado
+                visitados[i] = 1;
+                insere_fila(fi, i);
+                cont_adj++; 
+
+                if (cont_adj == max_adj) break;     // Esse vertice nao possui mais nenhum outro vertice adjacente
+            }
+        }
+    }
+
+    // Libera a fila e o vetor de visitados
+    libera_fila(fi);
+    free(visitados); 
+
+    // Libera o grafo G
+    libera_grafo(&g); 
+
+    return novo_g; 
 }

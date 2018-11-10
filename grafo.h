@@ -15,6 +15,7 @@ typedef struct vertice vertice;
 int formata_rotulo (Grafo* g, int vertice);                         // Função que retorna o rótulo de um vértice
 int indice_rotulo (Grafo* g, int rotulo);                           // Retorna o índice de um vértice à partir do seu rótulo
 int insere_rotulo (Grafo* g, int x, int y, int tamanho);            // Função que verifica se os rótulos x e y já estão presentes no grafo e os insere
+int insere_rotulo_v2 (Grafo* g, int x, int tamanho);                // Função que verifica se o rótulo x já está presente no grafo e o insere
 void preenche_vertice (Grafo* g, int i, int r);                     // Função que insere o vértice no grafo
 
 /// Aresta
@@ -36,6 +37,6 @@ int eh_conexo (Grafo* g);                                       // Função que 
 int dijkstra (Grafo* g, int v1, int v2);                        // Função que calcula o menor caminho entre dois vértices
 float centralidade_vertice (Grafo* g, int v1);                  // Função que calcula a centralidade de um vértice
 float centralidade_grafo (Grafo* g);                            // Função que calcula a centralidade do grafo
-
+Grafo* maior_componente_conexa (Grafo* g);                      // Função que retorna a maior componente conexa do grafo
 
 #endif // GRAFO_H_INCLUDED
