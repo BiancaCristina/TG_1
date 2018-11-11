@@ -14,8 +14,8 @@ int main() {
     //url1 = "/home/algar/Documentos/Bianca/Grafos/email-Enron.txt";
     //url1 = "/home/algar/Documentos/Bianca/Grafos/ca-GrQc.txt";
 
-    //url1 = "/home/bianca/Documentos/Grafos/ca-GrQc.txt";
-    url1 = "/home/bianca/Documentos/Grafos/ca-HepTh.txt";
+    url1 = "/home/bianca/Documentos/Grafos/ca-GrQc.txt";
+    //url1 = "/home/bianca/Documentos/Grafos/ca-HepTh.txt";
     //url1 = "/home/bianca/Documentos/Grafos/email-Enron.txt";
 
     /// Conta a quantidade de vértices do grafo
@@ -29,6 +29,9 @@ int main() {
 
     /// Insere as arestas no grafo
     le_aresta(g, url1);
+
+    // Maior componente conexa
+    g = maior_componente_conexa(g); 
 
     /// Busca em largura
     //int* visitado = (int*)calloc(qtd_vertices, sizeof(int));
@@ -51,9 +54,8 @@ int main() {
     // Centralidade grafo
     //centralidade_vertice(g, 1); 
 
-    // Maior componente conexa
-    g = maior_componente_conexa(g); 
-    exibe_grafo(g);
+    // Maior caminho
+    maior_caminho(g, 2, 10);
     
     libera_grafo(&g);
 

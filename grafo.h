@@ -38,5 +38,6 @@ int dijkstra (Grafo* g, int v1, int v2);                        // Função que 
 float centralidade_vertice (Grafo* g, int v1);                  // Função que calcula a centralidade de um vértice
 float centralidade_grafo (Grafo* g);                            // Função que calcula a centralidade do grafo
 Grafo* maior_componente_conexa (Grafo* g);                      // Função que retorna a maior componente conexa do grafo
+int maior_caminho (Grafo* g, int v1, int v2);                   // Função que calcula o maior caminho entre dois vértices
 
 #endif // GRAFO_H_INCLUDED

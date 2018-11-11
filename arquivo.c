@@ -90,6 +90,7 @@ int le_vertice (Grafo* g, char* url) {
 int le_aresta (Grafo* g, char* url) {
     if (g == NULL) return -1;   // Grafo não existe
 
+    printf("INSERINDO ARESTAS...\n");
     int contador = 0;
 
     FILE* arq;
@@ -100,7 +101,7 @@ int le_aresta (Grafo* g, char* url) {
         printf("Problema ao ler o arquivo\n");
         return -1;
     }
-
+    
     else {
         int v1, v2;
 
@@ -109,7 +110,6 @@ int le_aresta (Grafo* g, char* url) {
             fscanf(arq, "%d %d", &v1, &v2);
 
             insere_aresta(g, v1, v2);
-            printf("INSERINDO ARESTA... CONT = %d\n", contador);
             contador++;
         }
     }
