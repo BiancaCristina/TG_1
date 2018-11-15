@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "arquivo.h"
 #include "grafo.h"
 
@@ -14,13 +15,13 @@ int main() {
     //url1 = "/home/algar/Documentos/Bianca/Grafos/email-Enron.txt";
     //url1 = "/home/algar/Documentos/Bianca/Grafos/ca-GrQc.txt";
 
-    url1 = "/home/bianca/Documentos/Grafos/ca-GrQc.txt";
+    //url1 = "/home/bianca/Documentos/Grafos/ca-GrQc.txt";
     //url1 = "/home/bianca/Documentos/Grafos/ca-HepTh.txt";
-    //url1 = "/home/bianca/Documentos/Grafos/email-Enron.txt";
+    url1 = "/home/bianca/Documentos/Grafos/email-Enron.txt";
 
     /// Conta a quantidade de vértices do grafo
     qtd_vertices = conta_vertices(aproximado, url1);
-
+    
     /// Cria o grafo
     g = cria_grafo(qtd_vertices);
 
@@ -30,32 +31,26 @@ int main() {
     /// Insere as arestas no grafo
     le_aresta(g, url1);
 
+    // Quantidade de componentes conexas 
+    //printf("Componentes conexas antes de pegar a maior = %d\n", conta_componentes_conexas(g));
+    
     // Maior componente conexa
     g = maior_componente_conexa(g); 
 
-    /// Busca em largura
-    //int* visitado = (int*)calloc(qtd_vertices, sizeof(int));
-    //busca_largura(g, visitado, 0);
-    //free(visitado);
-    //getchar();
-
-    /// Coeficiente de agrupamento do vértice
-    //coeficiente_agrupamento(g);
-
-    /// Conta componentes conexas do grafo
-    //conta_componentes_conexas(g);
+    // Grafo conexo
+    printf("CONEXO = %d\n", eh_conexo(g));
     
-    // Verifica se grafo eh conexo
-    //printf("CONEXO = %d\n", eh_conexo(g));
+    // Numero de vertices
+    //printf("VERTICES = %d\n", numero_vertices(g));
 
-    // dijkstra
-    //dijkstra(g, 20, 32001);
+    // Numero de arestas
+    //printf("ARESTAS = %d\n", numero_arestas(g));
 
-    // Centralidade grafo
-    //centralidade_vertice(g, 1); 
+    // Grau medio
+    //printf("GRAU MEDIO = %d\n", grau_medio(g));
+    // Numero cromatico
+    // ?
 
-    // Maior caminho
-    maior_caminho(g, 2, 10);
     
     libera_grafo(&g);
 

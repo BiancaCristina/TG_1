@@ -653,7 +653,7 @@ int conta_componentes_conexas (Grafo* g) {
             // Caso ache um vértice desconectado aos demais, faz uma busca em largura nele
             // Não precisa zerar o vetor de visitados para que não faça busca novamente em vértices que já foram visitados
             
-            printf("CONTANDO COMPONENTES CONEXAS, CONTADOR = %d\n", contador);
+            //printf("CONTANDO COMPONENTES CONEXAS, CONTADOR = %d\n", contador);
             busca_largura(g, visitados, i);
             contador++;
         }
@@ -920,6 +920,7 @@ Grafo* maior_componente_conexa (Grafo* g) {
     // Diminui a quantidade de vertices analisados se o grafo for muito grande
     if (vertices > 20000) maximo = 5;
 
+    printf("FAZENDO BUSCA... \n");
     srand(time(NULL));
     while (atual < vertices && maximo > 0) {
         // Esse laco permanecera ate ter analisado todos os vertices do grafo ou ate que o maximo seja atingido
@@ -965,75 +966,40 @@ Grafo* maior_componente_conexa (Grafo* g) {
     int rotulo_atual;           // Marca o rotulo do vertice atualmente analisado
     int vertices_novo = 0;      // Marca a quantidade de vertices atual do novo grafo
     Grafo* novo_g;               
-    fila* fi; 
 
     // Zera o vetor de visitados
     for (i=0; i< vertices; i++) visitados[i] = 0; 
 
-    // Aloca a fila
-    fi = cria_fila(); 
+    // Faz busca em largura no vertice que possui a maior regiao conexa
+    busca_largura(g, visitados, maior); 
 
-    if (fi == NULL) {
-        // Problema ao alocar fila
-        free(visitados);
-        return NULL;
-    }
-
+    // Cria o novo grafo
     novo_g = cria_grafo(qtd_vertices_novo);
 
-    if (novo_g == NULL) {
-        // Problema ao criar grafo
-        free(visitados);
-        libera_fila(fi);
-        return NULL;
-    }
+    // Percorre o vetor de visitados
+    for (i=0; i< vertices; i++) {
+        if (visitados[i] == 1) {
+            // Se for 1, pego esse vertice e os adjacentes a ele e insiro no grafo novo
+            vertices_novo = insere_rotulo_v2(novo_g, g->info_v[i].r, vertices_novo);
 
-    // Trata o vertice indicado pela variavel "maior"
-    visitados[maior] = 1;
-    insere_fila(fi, maior);
+            no* aux = g->aresta[i];     
 
-    // Informacoes adicionais
-    max_adj = maximo_adjacente(g);
+            if (aux != NULL) {
+                // Caso o vertice tenha algum adjacente
 
-    printf("FAZENDO A BUSCA... \n");
-    // Busca em largura centrada no vertice indicado pela variavel "maior"
-    while (!fila_vazia(fi)) {
-        // Esse laco permanece ate que a fila fique vazia
-
-        atual = remove_fila_v2(fi);     
-        cont_adj = 0;                       // Zera os adjacentes do vertice
-        rotulo_atual = g->info_v[atual].r;  // Marca qual é o rótulo do vértice atual
-        
-        vertices_novo = insere_rotulo_v2(novo_g, rotulo_atual, vertices_novo);  // Insere infos do vertice no grafo novo
-
-        for (i=0; i< vertices; i++) {
-            // Percorre cada vertice do grafo verificando a adjacencia entre o vertice atual e o vertice i
-
-            if (verifica_adjacencia(g, atual, i) && visitados[i] == 0) {
-                // Verifica a adjacente entre o vertice atual e o vertice i
-
-                // Adiciona infos do vertice i no grafo (o atual ja foi inserido, logo nao precisa inserir novamente)
-                vertices_novo = insere_rotulo_v2(novo_g, g->info_v[i].r, vertices_novo); 
-
-                // Adiciona a aresta existente entre o vertice atual e o vertice i no novo grafo
-                insere_aresta(novo_g, g->info_v[atual].r, g->info_v[i].r);
-
-                // Marco o vertice i como visitado
-                visitados[i] = 1;
-                insere_fila(fi, i);
-                cont_adj++; 
-
-                if (cont_adj == max_adj) break;     // Esse vertice nao possui mais nenhum outro vertice adjacente
+                while (aux != NULL) {
+                    // Insere o vertice adjacente a "i" e a aresta entre "i" e seu adjacente no novo grafo
+                    vertices_novo = insere_rotulo_v2(novo_g, g->info_v[aux->v.v].r, vertices_novo);
+                    insere_aresta(novo_g, g->info_v[i].r, g->info_v[aux->v.v].r);
+                    aux = aux->prox; 
+                }
             }
         }
     }
 
-    // Libera a fila e o vetor de visitados
-    libera_fila(fi);
-    free(visitados); 
+    libera_grafo(&g);
 
-    // Libera o grafo G
-    libera_grafo(&g); 
+    free(visitados);
 
     return novo_g; 
 }
