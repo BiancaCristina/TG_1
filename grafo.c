@@ -8,6 +8,7 @@
 struct vertice {
     int v;      // Guarda o "indice" do vertice
     int r;      // Guarda o "rótulo" do vertice (corresponde ao nome dele no .txt)
+    char cor;   // Guarda a cor do vertice
     int grau;   // Guarda o grau do vertice
 };
 
