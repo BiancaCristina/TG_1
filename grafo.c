@@ -5,13 +5,6 @@
 #include "fila.h"
 #define INFINITO 24345345
 
-struct vertice {
-    int v;      // Guarda o "indice" do vertice
-    int r;      // Guarda o "rótulo" do vertice (corresponde ao nome dele no .txt)
-    int cor;    // Guarda a cor do vertice
-    int grau;   // Guarda o grau do vertice
-};
-
 struct aresta {
     int v1;     // Aresta origem
     int v2;     // Aresta destino

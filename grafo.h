@@ -11,7 +11,13 @@ void exibe_grafo (Grafo* g);                                    // Função que 
 void libera_grafo (Grafo** g);                                  // Função que libera o grafo
 
 /// Vértice
-typedef struct vertice vertice;
+typedef struct vertice {
+    int v;      // Guarda o "indice" do vertice
+    int r;      // Guarda o "rótulo" do vertice (corresponde ao nome dele no .txt)
+    int cor;    // Guarda a cor do vertice
+    int grau;   // Guarda o grau do vertice
+} vertice;
+
 int formata_rotulo (Grafo* g, int vertice);                         // Função que retorna o rótulo de um vértice
 int indice_rotulo (Grafo* g, int rotulo);                           // Retorna o índice de um vértice à partir do seu rótulo
 int insere_rotulo (Grafo* g, int x, int y, int tamanho);            // Função que verifica se os rótulos x e y já estão presentes no grafo e os insere
