@@ -52,8 +52,10 @@ int main() {
     // ?
 
     // Maior grau
-    printf("Maior grau = %d\n", maior_grau(g));
+    //printf("Maior grau = %d\n", maior_grau(g));
     
+    // Numero cromatico
+    printf("Numero cromatico = %d \n", numero_cromatico(g));
     libera_grafo(&g);
 
     //free(url1);

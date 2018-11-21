@@ -14,4 +14,6 @@ queue* cria_queue ();
 int insere_queue_ord (queue* fi, vertice v); 
 vertice remove_queue (queue* fi); 
 void exibe_queue (queue* fi);
+int queue_vazia (queue* fi); 
+int queue_tamanho (queue* fi);
 void libera_queue (queue* fi); 

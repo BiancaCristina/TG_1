@@ -108,6 +108,7 @@ int insere_rotulo_v2 (Grafo* g, int x, int tamanho) {
 void preenche_vertice (Grafo* g, int i, int r) {
     g->info_v[i].v = i;     // Índice do vértice == i
     g->info_v[i].r = r;     // Rótulo do vértice == r
+    g->info_v[i].cor = -1; 
 }
 
 /// Funçoes básicas de um grafo
@@ -896,7 +897,7 @@ Grafo* maior_componente_conexa (Grafo* g) {
     if (eh_conexo(g))   return g;   // Se o grafo for conexo, ele já é a maior componente conexa
 
     int i;
-    int maximo = 50;           // Limita quantos vertices serao analisados
+    int maximo = 5;           // Limita quantos vertices serao analisados
     int vertices = g->qtd_vertices;
     int contador = 0;           // Conta a quantidade de vertices alcancados a partir do vertice que esta sendo analisado
     int atual = 0;              // Marca qual vertice esta sendo analisado
@@ -1171,10 +1172,62 @@ int maior_grau (Grafo* g) {
 
     int maior_grau = 0;
     int i; 
-    
+
     for (i=0; i< g->qtd_vertices; i++) {
         if (g->info_v[i].grau > maior_grau) maior_grau = g->info_v[i].grau; 
     }
 
     return maior_grau; 
 }
+
+int numero_cromatico (Grafo* g) {
+    if (g == NULL) return -1; 
+
+    int i;
+    int vertices = g->qtd_vertices;
+    int maior_grau = 0; 
+    int i_cor = 0; 
+    vertice atual; 
+    queue* fi;
+
+    fi = cria_queue();
+
+    if (fi == NULL) return -1; 
+
+    for (i=0; i< vertices; i++) {
+        // Insere os vertices na fila e calcula o maior grau
+        insere_queue_ord(fi, g->info_v[i]);
+
+        if (g->info_v[i].grau > maior_grau) maior_grau = g->info_v[i].grau; 
+    }
+
+    while (!queue_vazia(fi)) {
+        //printf("i_cor = %d\n", i_cor);
+        atual = remove_queue(fi); 
+        
+        while (g->info_v[atual.v].cor >= 0 && (!queue_vazia(fi))) {
+            //printf("atual = %d, tamanho = %d\n", atual.v, queue_tamanho(fi));
+            atual = remove_queue(fi); 
+        }
+        
+        if (queue_vazia(fi)) break; 
+        
+        g->info_v[atual.v].cor = i_cor;
+
+        for(i=0; i< vertices; i++) {
+            // Para cada vertice do grafo, analisar se não é adjacente ao atual
+
+            if ((verifica_adjacencia(g, atual.v, i) == 0) && g->info_v[i].cor == -1) {
+                // Caso não seja adjacente e ainda não tenha sido colorido
+                //printf("cor %d! i = %d, atual.v = %d\n", i_cor, i, atual.v );
+                g->info_v[i].cor = i_cor;    
+            }
+        }
+
+        i_cor++; 
+
+    }
+
+    return i_cor; 
+}
+

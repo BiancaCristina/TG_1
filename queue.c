@@ -75,6 +75,10 @@ vertice remove_queue (queue* fi) {
         return removido;
     }
 }
+
+int queue_tamanho (queue* fi) {
+    return fi->tamanho; 
+}
  
 void exibe_queue (queue* fi) {
     if (fi == NULL) printf("Fila nao existe! \n");
@@ -85,6 +89,14 @@ void exibe_queue (queue* fi) {
         printf("grau = %d\n", aux->v.grau);
         aux = aux->prox; 
     }
+}
+
+int queue_vazia (queue* fi) {
+    if (fi == NULL) return 0;
+
+    if (fi->inicio == NULL) return 1;
+
+    return 0;
 }
 
 void libera_queue (queue* fi) {

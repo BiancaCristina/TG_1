@@ -19,23 +19,6 @@ fila* cria_fila()
 
 void libera_fila(fila* fi)
 {
-    /*
-    if (fi != NULL)
-    {
-        node* aux;
-
-        while (fi->inicio != NULL)
-        {
-            aux = fi->inicio;
-            fi->inicio = fi->inicio->prox;
-            free(aux);
-        }
-
-        free(fi);
-    }
-
-    */
-
     if (fi == NULL) return;     // Fila nao existe
 
     node* aux = fi->inicio;
@@ -47,8 +30,6 @@ void libera_fila(fila* fi)
     }
 
     free(fi);
-
-
 }
 
 int fila_tamanho(fila* fi)
