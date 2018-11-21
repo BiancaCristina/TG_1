@@ -3,6 +3,7 @@
 #include <time.h>
 #include "grafo.h"
 #include "fila.h"
+#include "queue.h"
 #define INFINITO 24345345
 
 struct aresta {
@@ -1163,5 +1164,17 @@ int maior_caminho (Grafo* g, int v1, int v2) {
     free(a_vis);
 
     return dist_total; 
+}
 
+int maior_grau (Grafo* g) {
+    if (g == NULL) return -1; 
+
+    int maior_grau = 0;
+    int i; 
+    
+    for (i=0; i< g->qtd_vertices; i++) {
+        if (g->info_v[i].grau > maior_grau) maior_grau = g->info_v[i].grau; 
+    }
+
+    return maior_grau; 
 }

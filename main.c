@@ -15,9 +15,9 @@ int main() {
     //url1 = "/home/algar/Documentos/Bianca/Grafos/email-Enron.txt";
     //url1 = "/home/algar/Documentos/Bianca/Grafos/ca-GrQc.txt";
 
-    //url1 = "/home/bianca/Documentos/Grafos/ca-GrQc.txt";
+    url1 = "/home/bianca/Documentos/Grafos/ca-GrQc.txt";
     //url1 = "/home/bianca/Documentos/Grafos/ca-HepTh.txt";
-    url1 = "/home/bianca/Documentos/Grafos/email-Enron.txt";
+    //url1 = "/home/bianca/Documentos/Grafos/email-Enron.txt";
 
     /// Conta a quantidade de vértices do grafo
     qtd_vertices = conta_vertices(aproximado, url1);
@@ -38,7 +38,7 @@ int main() {
     g = maior_componente_conexa(g); 
 
     // Grafo conexo
-    printf("CONEXO = %d\n", eh_conexo(g));
+    //printf("CONEXO = %d\n", eh_conexo(g));
     
     // Numero de vertices
     //printf("VERTICES = %d\n", numero_vertices(g));
@@ -51,6 +51,8 @@ int main() {
     // Numero cromatico
     // ?
 
+    // Maior grau
+    printf("Maior grau = %d\n", maior_grau(g));
     
     libera_grafo(&g);
 
