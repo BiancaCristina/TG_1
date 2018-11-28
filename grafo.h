@@ -47,5 +47,5 @@ Grafo* maior_componente_conexa (Grafo* g);                      // Função que 
 int maior_caminho (Grafo* g, int v1, int v2);                   // Função que calcula o maior caminho entre dois vértices
 int maior_grau (Grafo* g);                                      // Função que retorna qual maior grau do grafo
 int numero_cromatico (Grafo* g);                                // Função que calcula o número cromático do grafo
-
+int excentricidade_vertice (Grafo* g, int v1);
 #endif // GRAFO_H_INCLUDED

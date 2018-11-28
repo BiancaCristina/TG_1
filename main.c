@@ -55,8 +55,11 @@ int main() {
     //printf("Maior grau = %d\n", maior_grau(g));
     
     // Numero cromatico
-    printf("Numero cromatico = %d \n", numero_cromatico(g));
-    libera_grafo(&g);
+    //printf("Numero cromatico = %d \n", numero_cromatico(g));
+
+    // Excentricidade media
+    excentricidade_vertice(g,0);
+    
 
     //free(url1);
 

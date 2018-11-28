@@ -1001,21 +1001,23 @@ Grafo* maior_componente_conexa (Grafo* g) {
 }
 
 int maior_caminho (Grafo* g, int v1, int v2) {
-    if (g == NULL || v1 < 0 || v2 < 0) return -1;   // Grafo nem existe
+    if (g == NULL || v1 < 0 || v2 < 0) return -1;   // Grafo não existe ou vértices inválidos (negativos)
 
+    int i;
+    int inicial;            // Marca o vértice em curso
+    int k;
+    int dist_aux;           // Distância auxiliar para calcular o menor caminho
     int vertices = g->qtd_vertices;
-    int i, j, k; 
-    int inicial;            // Variavel que marca qual vertice estou analisando
-    int cont_adj = 0;       // Conta os adjacentes ja visitados do vertice que esta sendo analisado
-    int max_adj;            // Guarda qual a quantidade maxima de adjacentes que um vertice pode ter
-    int dist_aux;           // Distancia auxiliar para calcular o maior caminho
-    int dist_total = 1;     // Guarda a distancia percorrida no total
-    int maximo;             // Guarda a distancia maxima
-
-    int* visitados;         // Marca quais vertices ja foram visitados
-    int* antecessor;        // Marca qual o antecessor de um dado vertice
-    int* distancia;         // Marca as distancias de cada vertice
-    int** a_vis;            // Marca quais arestas ja foram visitadas
+    int minimo;
+    int dist_total = 0;     // Guarda a distância percorrida no total
+    int max_adj;            // Máximo de adjacentes que um vértice pode ter
+    int cont_adj = 0;       // Conta os adjacentes do vértice atual
+    int tamanho = 100;      // Tamanho temporário para os vetores
+    int* visitados;         // Vetor para marcar os vértices já visitados
+    int* antecessor;        // Vetor para guardar o vértice anterior ao atual
+    int* distancia;         // Vetor que guarda a distância
+    int* vis_temp;          
+    int* caminho = (int*)malloc(vertices* sizeof(int)); 
 
     visitados = (int*)calloc(vertices, sizeof(int));
 
@@ -1027,7 +1029,7 @@ int maior_caminho (Grafo* g, int v1, int v2) {
     antecessor = (int*)malloc(vertices * sizeof(int));
 
     if (antecessor == NULL) {
-        // Problema ao alocar vetor de antecessor
+        // Problema ao alocar veor de antecessor
         free(visitados);
         return -1;
     }
@@ -1036,135 +1038,127 @@ int maior_caminho (Grafo* g, int v1, int v2) {
 
     if (distancia == NULL) {
         // Problema ao alocar vetor de distancia
-        free(visitados);
         free(antecessor);
+        free(visitados);
         return -1;
     }
 
-    a_vis = (int**)malloc(vertices * sizeof(int*));
+    vis_temp = (int*)calloc(vertices, sizeof(int));
 
-    if (a_vis == NULL) {
-        // Problema ao alocar vetor de arestas visitadas
-        free(visitados);
+    if (vis_temp == NULL) {
         free(antecessor);
+        free(visitados);
         free(distancia);
         return -1;
     }
 
     for (i=0; i< vertices; i++) {
-        a_vis[i] = (int*)calloc(vertices, sizeof(int));
+        // Inicializa todas as posicoes de antecessor com -1
+        // Inicializa todas as posicoes de distancia com INFINITO
 
-        if (a_vis[i] == NULL) {
-            // Problema ao alocar a_vista[i]
-
-            for(j=0; j< i; j++) {
-                free(a_vis[j]);
-            }
-
-            free(a_vis);
-            free(visitados);
-            free(antecessor);
-            free(distancia);
-            return -1; 
-        } 
-    }
-
-    // Inicializa o vetor de antecessor com -1 e o de distancia com 0
-    for (i=0; i< vertices; i++) {
         antecessor[i] = -1;
-        distancia[i] = 0;
+        distancia[i] = INFINITO;
     }
 
-    // Trata o vertice iicial
-    inicial = v1;           // O primeiro vertice analisado é a origem (v1)
-    distancia[v1] = 0;      // A distância entre v1 e ele mesmo é 0
+    // Trata o vértice de origem
+    inicial = v1;               // Inicialmente, inicial == v1 (origem)
+    distancia[inicial] = 0;     // A distância do inicial pra ele mesmo é 0
+
+    // Informacoes adicionais
+    max_adj = maximo_adjacente(g);
 
     while (inicial != v2 && inicial != -1) {
-        // Esse laco permanece ate que ache um caminho de v1 pra v2 ou que nao haja caminho entre os dois
-
+        // Esse laço permancera até que o inicial chegue ao destino ou não exista caminho entre v1 e v2
+        //printf("VERTICE ATUAL = %d\n", inicial);
+        
         for (i=0; i< vertices; i++) {
-            // Percorre cada vertice do grafo pra verificar a adjacencia entre o inicial e o vertice i
             
-            if (verifica_adjacencia(g, inicial, i) && visitados[i] != 1 && a_vis[inicial][i] != 1 && a_vis[i][inicial] != 1) {
-                // Utiliza tres condicoes:
-                // I) Vertice inicial e vertice sao adjacentes
-                // II) Vertice i ainda nao foi visitado
-                // III) Aresta i->inicial e inicial->i ainda nao foi visitada
+            //if (visitado[i] == 1) break;
+            if (vis_temp[i] != 1) {
+                if (verifica_adjacencia(g, inicial, i) && visitados[i] == 0) {
+                    // Se a aresta entre "inicial" e "i" existe e se "i" ainda nao foi visitado
+                    vis_temp[i] = 1; 
+                    printf("VERTICE NO MAIOR CAMINHO = %d Vis = %d\n", i, vis_temp[i]);
+                    dist_aux = distancia[inicial] - 1;  // Andou pra algum vértice
 
-                dist_aux = distancia[inicial] + 1;
-                
-                if (dist_aux > distancia[i]) {
-                    // Se a distancia for maior, substitui
-                    distancia[i] = dist_aux;
-                    antecessor[i] = inicial;
+                    if (dist_aux < distancia[i]) {
+                        // Se a distância auxiliar for menor, substitui
+                        distancia[i] = dist_aux;
+                        antecessor[i] = inicial;    // Marca que o inicial é o antecessor do vértice "i"
+                    }
                 }
 
-                // Marca essa aresta como visitada
-                a_vis[inicial][i] = 1;
-                a_vis[i][inicial] = 1;
+                if (cont_adj == max_adj) {
+                    // Esse vértice não possui mais nenhum adjacente
+                    break;
+                }
             }
         }
 
-        visitados[inicial] = 1;         // Todos os vertices adjacentes ao inicial foram analisados
-        maximo = 0;
-        inicial = -1;                   // Inicial passa a ter um valor invalido (-1)
+        for (i=0; i< vertices; i++) vis_temp[i] = 0;
+        printf("PAREI AQUI? \n");
+        visitados[inicial] = 1;     // Todos os vértices adjacentes ao inicial já foram visitados
+        minimo = INFINITO;
+        inicial = -1;               // Inicial passa a ter um valor inválido
 
-        for (i=0; i< vertices; i++) {
-            // Percorre cada vertice do grafo para selecionar qual sera o proximo vertice
+        for (i=0; i< vertices; i++){
+            // Percorre para achar o próximo vértice que possui a menor distância
 
-            if (visitados[i] == 0 && distancia[i] > maximo) {
-                // Escolhe qual vertice possui a maior distancia
-                maximo = distancia[i];
-                inicial = i;
+            if (visitados[i] == 0 && distancia[i] < minimo) {
+                minimo = distancia[i];      // Novo valor para minimo
+                inicial = i;                // Vértice que será analisado
             }
         }
+
+        printf("v2 =%d, inicial = %d, visitados ini = %d, vis temp ini = %d\n", v2, inicial, visitados[inicial], vis_temp[inicial]);
+        
+        if (inicial == v2) break; 
     }
 
-    // Calcula a distancia percorrida
+    // Adiciona o caminho percorrido no vetor caminho (caso exista)
+
+    dist_total = 1;         // Conta o primeiro vertice
 
     if (inicial == v2) {
+        printf("ENTREI AQUI  \n");
         // Caso haja caminho entre v1 e v2
+        caminho[0] = v2;
         k = 1;
 
         while (inicial != v1) {
+            printf("k = %d, inicial = %d, antecessor = %d\n", k, inicial, antecessor[inicial]);
+            caminho[k] = antecessor[inicial];
             inicial = antecessor[inicial];
             k++;
-            dist_total++; 
+            //dist_total++;       // Soma a dist_total
         }
 
-        printf("DISTANCIA TOTAL = %d\n", dist_total);
-    } 
+        //printf("DISTANCIA TOTAL = %d\n", dist_total);
+    }
 
     else {
-        // Caso nao haja caminho entre v1 e v2
+        // Não existe caminho entre v1 e v2
         printf("Não existe caminho entre os vértices %d e %d\n", v1, v2);
 
-        // Libera o que foi previamente alocado
+        // Libera o que foi alocado
         free(visitados);
         free(antecessor);
         free(distancia);
 
-        for (i=0; i< vertices; i++) {
-            free(a_vis[i]);
-        }
-
-        free(a_vis);
-
         return -1;
     }
 
-    // Libera o que foi previamente alocado
+    for (i=k; i>0; i--){
+        if (i==1) printf(" %d ", caminho[i-1]); // IMPRIME SEM A "->"
+        else printf(" %d ->", caminho[i-1]);
+    }
+
+    // Libera o que foi alocado
     free(visitados);
     free(antecessor);
     free(distancia);
 
-    for (i=0; i< vertices; i++) {
-        free(a_vis[i]);
-    }
-
-    free(a_vis);
-
-    return dist_total; 
+    return dist_total;    
 }
 
 int maior_grau (Grafo* g) {
@@ -1231,3 +1225,32 @@ int numero_cromatico (Grafo* g) {
     return i_cor; 
 }
 
+int excentricidade_vertice (Grafo* g, int v1) {
+    if (g == NULL || v1 < 0) return -1;
+
+    int i;
+    int exc_temp = 0;
+    int excentricidade = 0;
+    int contador = 0;
+    int aleatorio;
+
+    srand(time(NULL));
+
+    while (contador < 25) {
+        aleatorio = rand() % g->qtd_vertices;
+        
+        printf("CALCULANDO ENTRE %d e %d\n", v1, aleatorio);
+        exc_temp = maior_caminho(g, v1, aleatorio);
+
+        if (exc_temp != -1) {
+            // Caso exista caminho
+            
+            if (exc_temp > excentricidade) excentricidade = exc_temp;
+            contador++;
+        }    
+    }
+
+    printf("EXCENTRICIDADE DE %d = %d\n", v1, excentricidade);
+
+    return excentricidade; 
+}
