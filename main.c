@@ -15,9 +15,9 @@ int main() {
     //url1 = "/home/algar/Documentos/Bianca/Grafos/email-Enron.txt";
     //url1 = "/home/algar/Documentos/Bianca/Grafos/ca-GrQc.txt";
 
-    url1 = "/home/bianca/Documentos/Grafos/ca-GrQc.txt";
+    //url1 = "/home/bianca/Documentos/Grafos/ca-GrQc.txt";
     //url1 = "/home/bianca/Documentos/Grafos/ca-HepTh.txt";
-    //url1 = "/home/bianca/Documentos/Grafos/email-Enron.txt";
+    url1 = "/home/bianca/Documentos/Grafos/email-Enron.txt";
 
     /// Conta a quantidade de vértices do grafo
     qtd_vertices = conta_vertices(aproximado, url1);
@@ -58,8 +58,8 @@ int main() {
     //printf("Numero cromatico = %d \n", numero_cromatico(g));
 
     // Excentricidade media
-    excentricidade_vertice(g,0);
-    
+    //excentricidade_vertice(g,0);
+    excentricidade_grafo(g);
 
     //free(url1);
 

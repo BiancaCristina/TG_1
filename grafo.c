@@ -800,7 +800,7 @@ int dijkstra (Grafo* g, int v1, int v2) {
             dist_total++;       // Soma a dist_total
         }
 
-        printf("DISTANCIA TOTAL = %d\n", dist_total);
+        //printf("DISTANCIA TOTAL = %d\n", dist_total);
     }
 
     else {
@@ -1233,14 +1233,16 @@ int excentricidade_vertice (Grafo* g, int v1) {
     int excentricidade = 0;
     int contador = 0;
     int aleatorio;
+    int maximo = 20;
+
+    if (g->qtd_vertices > 20000) maximo = 10; 
 
     srand(time(NULL));
-
-    while (contador < 25) {
+    while (contador < maximo) {
         aleatorio = rand() % g->qtd_vertices;
         
-        printf("CALCULANDO ENTRE %d e %d\n", v1, aleatorio);
-        exc_temp = maior_caminho(g, v1, aleatorio);
+        //printf("CALCULANDO ENTRE %d e %d\n", v1, aleatorio);
+        exc_temp = dijkstra(g, v1, aleatorio);
 
         if (exc_temp != -1) {
             // Caso exista caminho
@@ -1253,4 +1255,31 @@ int excentricidade_vertice (Grafo* g, int v1) {
     printf("EXCENTRICIDADE DE %d = %d\n", v1, excentricidade);
 
     return excentricidade; 
+}
+
+float excentricidade_grafo (Grafo* g) {
+    if (g == NULL) return -1;
+
+    int i;
+    int contador = 0;
+    float excentricidade;
+    int somatorio = 0; 
+    int aleatorio; 
+    int maximo = 20;
+
+    if (g->qtd_vertices > 20000) maximo = 10;
+
+    srand(time(NULL));
+    while (contador < maximo) {
+        aleatorio = rand() % g->qtd_vertices;
+
+        somatorio += excentricidade_vertice(g, aleatorio);
+        contador++;
+    }
+
+    excentricidade = somatorio;
+    excentricidade = excentricidade/contador;
+
+    printf("EXCENTRICIDADE GRAFO = %f\n", excentricidade);
+    return excentricidade;
 }

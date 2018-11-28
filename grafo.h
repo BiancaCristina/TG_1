@@ -48,4 +48,6 @@ int maior_caminho (Grafo* g, int v1, int v2);                   // Função que 
 int maior_grau (Grafo* g);                                      // Função que retorna qual maior grau do grafo
 int numero_cromatico (Grafo* g);                                // Função que calcula o número cromático do grafo
 int excentricidade_vertice (Grafo* g, int v1);
+float excentricidade_grafo (Grafo* g);
+
 #endif // GRAFO_H_INCLUDED
