@@ -1283,3 +1283,32 @@ float excentricidade_grafo (Grafo* g) {
     printf("EXCENTRICIDADE GRAFO = %f\n", excentricidade);
     return excentricidade;
 }
+
+int diametro_raio_grafo (Grafo* g) {
+    if (g == NULL) return -1;
+
+    int contador = 0;
+    int diametro = 0;
+    int raio = INFINITO;
+    int temp = 0;
+    int maximo = 20;
+    int aleatorio;
+
+    if (g->qtd_vertices > 20000) maximo = 20;
+
+    srand(time(NULL));
+    while (contador < maximo) {
+        aleatorio = rand() % g->qtd_vertices;
+
+        temp = excentricidade_vertice(g, aleatorio); 
+
+        if (temp > diametro) diametro = temp;
+        if (temp < raio) raio = temp; 
+
+        contador++;
+    }
+
+    printf("DIAMETRO = %d, RAIO = %d\n", diametro, raio);
+
+    return diametro; 
+}
