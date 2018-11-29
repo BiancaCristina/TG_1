@@ -1285,6 +1285,8 @@ float excentricidade_grafo (Grafo* g) {
 }
 
 int diametro_raio_grafo (Grafo* g) {
+    // Retorna o raio
+
     if (g == NULL) return -1;
 
     int contador = 0;
@@ -1294,7 +1296,7 @@ int diametro_raio_grafo (Grafo* g) {
     int maximo = 20;
     int aleatorio;
 
-    if (g->qtd_vertices > 20000) maximo = 20;
+    if (g->qtd_vertices > 20000) maximo = 10;
 
     srand(time(NULL));
     while (contador < maximo) {
@@ -1309,6 +1311,37 @@ int diametro_raio_grafo (Grafo* g) {
     }
 
     printf("DIAMETRO = %d, RAIO = %d\n", diametro, raio);
+    
+    return raio; 
+}
 
-    return diametro; 
+float vertices_centrais (Grafo* g) {
+    if (g == NULL) return -1;
+
+    int maximo = 20;
+    int contador = 0;
+    int porcentagem = 0;
+    int exc_v = 0;
+    int raio_g = 0; 
+    int aleatorio;
+    float porcentagem_centrais; 
+
+    if (g->qtd_vertices > 20000) maximo = 10;
+
+    srand(time(NULL));
+    while (contador < maximo) {
+        aleatorio = rand() % g->qtd_vertices;
+        
+        raio_g = diametro_raio_grafo(g);
+        exc_v = excentricidade_vertice(g, aleatorio);
+
+        if (raio_g == exc_v) porcentagem++; 
+        contador++;
+    }
+
+    porcentagem_centrais = porcentagem;
+    porcentagem_centrais = porcentagem_centrais/contador; 
+
+    printf("PORCENTAGEM CENTRAIS = %f\n", porcentagem_centrais);
+    return porcentagem_centrais;
 }

@@ -50,6 +50,6 @@ int numero_cromatico (Grafo* g);                                // Função que 
 int excentricidade_vertice (Grafo* g, int v1);
 float excentricidade_grafo (Grafo* g);
 int diametro_raio_grafo (Grafo* g);
-
+float vertices_centrais (Grafo* g); 
 
 #endif // GRAFO_H_INCLUDED

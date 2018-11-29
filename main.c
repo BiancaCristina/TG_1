@@ -16,8 +16,8 @@ int main() {
     //url1 = "/home/algar/Documentos/Bianca/Grafos/ca-GrQc.txt";
 
     //url1 = "/home/bianca/Documentos/Grafos/ca-GrQc.txt";
-    url1 = "/home/bianca/Documentos/Grafos/ca-HepTh.txt";
-    //url1 = "/home/bianca/Documentos/Grafos/email-Enron.txt";
+    //url1 = "/home/bianca/Documentos/Grafos/ca-HepTh.txt";
+    url1 = "/home/bianca/Documentos/Grafos/email-Enron.txt";
 
     /// Conta a quantidade de vértices do grafo
     qtd_vertices = conta_vertices(aproximado, url1);
@@ -63,6 +63,9 @@ int main() {
 
     // Diametro + raio
     diametro_raio_grafo (g);
+
+    // Vertices centrais
+    //vertices_centrais(g);
     //free(url1);
 
     return 1;
